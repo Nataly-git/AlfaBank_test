@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ExchangeRatesService {
 
-    public List<ExchangeRatesDTO> getExchangeRates();
+    public Double getExchangeRatesGap();
 
 
 }
