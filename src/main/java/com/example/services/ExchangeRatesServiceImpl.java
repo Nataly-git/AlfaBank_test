@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Service
 public class ExchangeRatesServiceImpl  implements ExchangeRatesService{
@@ -21,14 +20,16 @@ public class ExchangeRatesServiceImpl  implements ExchangeRatesService{
     @Value("${exchangerates.app_id}")
     private String appId;
 
-    @Value("${exchangerates.currency}")
-    private String currency;
 
-
-    @Override
-    public Double getExchangeRatesGap() {
-        Double currentRate = client.getLatestExchangeRates(appId).getRates().get(currency);
-        Double recentRate = client.getHistoricalExchangeRates(getYesterdayDate(), appId).getRates().get(currentRate);
+    public Double getExchangeRatesGap(String currency) {
+        Double currentRate = 0.;
+        Double recentRate = 0.;
+        try {
+            currentRate = client.getLatestExchangeRates(appId).getRates().get(currency.toUpperCase());
+            recentRate = client.getHistoricalExchangeRates(getYesterdayDate(), appId).getRates().get(currency.toUpperCase());
+        } catch (Exception e) {
+            throw new IncorrectCurrencyException();
+        }
         return currentRate - recentRate;
     }
 
