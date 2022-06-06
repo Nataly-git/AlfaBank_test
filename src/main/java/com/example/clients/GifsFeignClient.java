@@ -5,11 +5,11 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name="gifsClient", url="${gif.url}")
+@FeignClient(name="gif", url="${gif.url}")
 public interface GifsFeignClient {
 
-    @GetMapping(params = {"api_key", "q"})
-    public GifDTO getGif(@RequestParam("api_key") String appId,
-                         @RequestParam("q") String query);
+    @GetMapping
+    GifDTO getGif(@RequestParam("api_key") String appId,
+                  @RequestParam("tag") String tag);
 
 }

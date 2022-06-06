@@ -23,23 +23,8 @@ public class GifsServiceImpl implements GifsService{
         this.client = client;
     }
 
-    public ResponseEntity<byte[]> getGifByUrl(String query) {
-        return getGif(getGifUrlDependsOnExchangeRates(query));
-    }
-
-    private String getGifUrlDependsOnExchangeRates(String query) {
-        return client.getGif(appId, query)
-                .getRandomGif()
-                .getImages()
-                .get("original")
-                .getUrl();
-    }
-
-    private ResponseEntity<byte[]> getGif(String url) {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Collections.singletonList(MediaType.IMAGE_GIF));
-        HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
-        return restTemplate.exchange(url, HttpMethod.GET, httpEntity, byte[].class);
+    public String getGifUrl(String tag) {
+        GifDTO gif = client.getGif(appId, tag);
+        return (String) gif.getData().get("url");
     }
 }
