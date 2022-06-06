@@ -1,7 +1,7 @@
 package com.example.services;
 
-import com.example.dto.GifDTO;
+import org.springframework.http.ResponseEntity;
 
 public interface GifsService {
-    public GifDTO getGifDependsOnExchangeRates(String tag);
+    public ResponseEntity<byte[]> getGifByUrl(String query);
 }
