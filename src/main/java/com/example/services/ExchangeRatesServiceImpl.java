@@ -1,6 +1,7 @@
 package com.example.services;
 
 import com.example.clients.ExchangeRatesFeignClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -13,27 +14,20 @@ public class ExchangeRatesServiceImpl  implements ExchangeRatesService{
 
     private ExchangeRatesFeignClient client;
 
+    @Value("${exchangerates.app_id}")
+    private String appId;
+
+    @Value("${exchangerates.base}")
+    private String base;
+
+    @Autowired
     public ExchangeRatesServiceImpl(ExchangeRatesFeignClient client) {
         this.client = client;
     }
 
-    @Value("${exchangerates.app_id}")
-    private String appId;
-
-//    public String getTagDependOnExchangeRates(String currency) {
-//        Double gap = getExchangeRatesGap(currency);
-//        if(gap > 0) {
-//            return "rich";
-//        }
-//        else if(gap < 0) {
-//            return "broke";
-//        }
-//        else return "equal";
-//    }
-
     public int getExchangeRatesGap(String currency) {
-        BigDecimal currentRate = BigDecimal.valueOf(client.getLatestExchangeRates(appId, currency).getRates().get(currency.toUpperCase()));
-        BigDecimal recentRate = BigDecimal.valueOf(client.getHistoricalExchangeRates(getYesterdayDate(), appId, currency).getRates().get(currency.toUpperCase()));
+        BigDecimal currentRate = BigDecimal.valueOf(getTodayRate(currency));
+        BigDecimal recentRate = BigDecimal.valueOf(getDateRate(currency, getYesterdayDate()));
         return currentRate.compareTo(recentRate);
     }
 
@@ -41,5 +35,13 @@ public class ExchangeRatesServiceImpl  implements ExchangeRatesService{
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate yesterday = LocalDate.now().minusDays(1);
         return formatter.format(yesterday);
+    }
+
+    public Double getDateRate(String symbols, String date) {
+        return client.getHistoricalExchangeRates(date, appId, base, symbols).getRates().get(symbols.toUpperCase());
+    }
+
+    public Double getTodayRate(String symbols) {
+        return client.getLatestExchangeRates(appId, base, symbols).getRates().get(symbols.toUpperCase());
     }
 }

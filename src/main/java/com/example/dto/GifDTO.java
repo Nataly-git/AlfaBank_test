@@ -10,14 +10,4 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class GifDTO {
     private Map<String, Object> data;
-
-//    public ImageObject getRandomGif() {
-//        return data.get(getRandomNumber());
-//    }
-//
-//    private int getRandomNumber() {
-//        int max = data.size() - 1;
-//        int randomNumber = (int) (Math.random() * max);
-//        return randomNumber;
-//    }
 }

@@ -11,11 +11,13 @@ public interface ExchangeRatesFeignClient {
 
     @GetMapping("/latest.json")
     ExchangeRatesDTO getLatestExchangeRates(@RequestParam("app_id") String appId,
-                                                   @RequestParam("symbols") String symbols);
+                                            @RequestParam("base") String base,
+                                            @RequestParam("symbols") String symbols);
 
     @GetMapping("/historical/{date}.json")
     ExchangeRatesDTO getHistoricalExchangeRates(@PathVariable("date") String date,
-                                                       @RequestParam ("app_id") String appId,
-                                                       @RequestParam("symbols") String symbols);
+                                                @RequestParam ("app_id") String appId,
+                                                @RequestParam("base") String base,
+                                                @RequestParam("symbols") String symbols);
 
 }
